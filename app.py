@@ -64,16 +64,29 @@ def create_cupcake():
 # Make routes for the following:
 
 # PATCH /api/cupcakes/[cupcake-id]
-# Update a cupcake with the id passed in the URL and flavor, size, rating and image data from the body of the request. You can always assume that the entire cupcake object will be passed to the backend.
-
+# Update a cupcake with the id passed in the URL and flavor, size, rating and image data from the body of the request. 
+# You can always assume that the entire cupcake object will be passed to the backend.
 # This should raise a 404 if the cupcake cannot be found.
-
 # Respond with JSON of the newly-updated cupcake, like this: {cupcake: {id, flavor, size, rating, image}}.
+@app.route("/api/cupcakes/<cupcake_id>", methods=["PATCH"])
+def update_cupcake(cupcake_id):
+    """Updates data for a specified cupcake in the table."""
+    cupcake_to_update = Cupcake.query.get_or_404(cupcake_id)
+    for key in request.json.keys():
+        setattr(cupcake_to_update, key, request.json.get(key, None))
+    db.session.commit()
+    return jsonify(cupcake=cupcake_to_update.serialize())
 
 # DELETE /api/cupcakes/[cupcake-id]
 # This should raise a 404 if the cupcake cannot be found.
-
 # Delete cupcake with the id passed in the URL. Respond with JSON like {message: "Deleted"}.
+@app.route("/api/cupcakes/<cupcake_id>", methods=["DELETE"])
+def delete_cupcake(cupcake_id):
+    """Deletes a specified cupcake from the table."""
+    cupcake_to_delete = Cupcake.query.get_or_404(cupcake_id)
+    db.session.delete(cupcake_to_delete)
+    db.session.commit()
+    return jsonify({"message":"deleted"})
 
 # Test these routes in Insomnia.
 
