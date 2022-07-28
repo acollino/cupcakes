@@ -5,13 +5,15 @@ db = SQLAlchemy()
 
 
 def connect_db(app):
-    """Connect to the cupcakes database."""
+    """Connect to the desserts database."""
     db.app = app
     db.init_app(app)
 
 
 class Cupcake(db.Model):
     """Class representing a cupcake with flavor, size, rating, and image."""
+
+    __tablename__ = "cupcakes"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     flavor = db.Column(db.Text, nullable=False)
