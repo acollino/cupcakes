@@ -19,7 +19,8 @@ connect_db(app)
 
 @app.route("/")
 def display_home():
-    pass
+    """Display the home page of the cupcakes site."""
+    return render_template("index.html")
 
 
 # Part Two: Listing, Getting & Creating Cupcakes

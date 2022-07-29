@@ -1,0 +1,8 @@
+.form-label {
+  min-width: 4.8rem;
+  display: inline-block;
+}
+
+#input-rating {
+  width: 4em;
+}

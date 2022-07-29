@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://code.jquery.com/jquery-3.6.0.js" defer></script>
+  <script src="/static/scripts/cupcakes.js" defer></script>
+  <link rel="stylesheet" href="/static/css/generic_styles.css">
+  <link rel="stylesheet" href="/static/css/specific_styles.css">
+  <title>Cupcakes</title>
+</head>
+
+<body>
+  <div class="column centered">
+    <h1>Available Cupcakes</h1>
+    <div class="row wrap" id="cupcake-row">
+    </div>
+    <h2>Add New Cupcake</h2>
+    <form class="column">
+      <div class="">
+        <label for="input-flavor" class="form-label">Flavor</label>
+        <input type="text" id="input-flavor" required name="flavor">
+      </div>
+      <div class="">
+        <label for="input-size" class="form-label">Size</label>
+        <input type="text" id="input-size" required name="size">
+      </div>
+      <div class="align-l">
+        <label for="input-rating" class="form-label">Rating</label>
+        <input type="number" id="input-rating" required step="0.1" size="3" name="rating">
+      </div>
+      <div class="">
+        <label for="input-image" class="form-label">Image URL</label>
+        <input type="url" id="input-image" name="image">
+      </div>
+      <button class="button-blue margin-1" id="submit">Submit</button>
+    </form>
+  </div>
+</body>
+
+</html>
