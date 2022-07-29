@@ -1,3 +1,7 @@
+h2 {
+  margin: 0;
+}
+
 .form-label {
   min-width: 4.8rem;
   display: inline-block;
@@ -5,4 +9,20 @@
 
 #input-rating {
   width: 4em;
+}
+
+.picture-container{
+  position: relative;
+}
+
+.picture-container:hover .delete{
+  opacity: 100%;
+}
+
+.delete {
+  position: absolute;
+  top: 1.5rem;
+  right: 0.5rem;
+  opacity: 0%;
+  transition: opacity 0.25s ease-in;
 }

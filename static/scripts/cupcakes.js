@@ -1,30 +1,3 @@
-// async function submitNewCupcake(evt) {
-//   evt.preventDefault()
-//   let flavor = $("#input-flavor").val();
-//   let size = $("#input-size").val();
-//   let rating = $("#input-rating").val();
-//   let image = $("#input-image").val();
-//   let cupcakeJSON = JSON.stringify({ flavor, size, rating, image });
-//   fetchObj = {
-//     method: "post",
-//     headers: { "Content-Type": "application/json" },
-//     body: cupcakeJSON,
-//   }
-//   // let response = await fetch("/api/cupcakes", fetchObj);
-//   // return response.json();
-//   await fetch("/api/cupcakes", fetchObj);
-//   displayAllCupcakes();
-// }
-
-// async function displayAllCupcakes() {
-//   $("ul").empty();
-//   let response = await fetch("/api/cupcakes");
-//   let cupcakes = (await response.json()).cupcakes;
-//   cupcakes.forEach(cake => {
-//     $("ul").append($(`<li>${cake.flavor}</li>`));
-//   });
-// }
-
 class Cupcake {
   constructor(inputObj) {
     for (let attrib in inputObj) {
@@ -33,8 +6,10 @@ class Cupcake {
   }
 
   generateJQuery() {
-    let $cakeCard = $("<div>").addClass("column padded-1");
-    $cakeCard.append($(`<img src=${this.image}>`).addClass("profile-picture"));
+    let $cakeCard = $("<div>").addClass("column padded-1 card");
+    let $imgHolder = $("<div>").addClass("picture-container");
+    $imgHolder.append($(`<img src=${this.image}>`).addClass("profile-picture"));
+    $cakeCard.append($imgHolder);
     $cakeCard.append($("<div>").text(`Flavor: ${this.flavor}`));
     $cakeCard.append($("<div>").text(`Size: ${this.size}`));
     $cakeCard.append($("<div>").text(`Rating: ${this.rating}`));
@@ -43,7 +18,7 @@ class Cupcake {
   }
 
   generateDeleter() {
-    let $deleter = $("<div>").text("X");
+    let $deleter = $("<div>").text("X").addClass("delete button button-red");
     $deleter.on("click", this.delete.bind(this));
     return $deleter;
   }
@@ -75,9 +50,10 @@ class CupcakeList {
     let $cakeCard = cupcake.generateJQuery();
     let $deleter = cupcake.generateDeleter();
     $deleter.on("click", () => {
-      this.deleteCupcake($deleter.parent().attr("data-id"));
-    })
-    $("#cupcake-row").append($cakeCard.append($deleter));
+      this.deleteCupcake($deleter.parents(".card").attr("data-id"));
+    });
+    $cakeCard.children(".picture-container").append($deleter);
+    $("#cupcake-row").append($cakeCard);
   }
 
   displayAllCupcakes() {
@@ -88,7 +64,7 @@ class CupcakeList {
   }
 
   async submitNewCupcake() {
-    let inputs = Array.from($("input"));
+    let inputs = Array.from($(".input-add"));
     let inputNamesValues = inputs.reduce((inputObj, currInput) => {
       inputObj[currInput.name] = Boolean(currInput.value)
         ? currInput.value
