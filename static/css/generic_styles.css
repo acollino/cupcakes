@@ -38,6 +38,10 @@ hr {
   margin: 1rem;
 }
 
+.margin-half-top {
+  margin-top: 0.5rem;
+}
+
 .column-small {
   display: flex;
   flex-direction: column;
@@ -52,6 +56,10 @@ hr {
   justify-content: center;
   align-items: center;
   text-align: center;
+}
+
+.gap-1{
+  gap: 1rem;
 }
 
 .wrap {
@@ -158,9 +166,13 @@ button:active,
   padding: 1rem;
 }
 
+.padded-0 {
+  padding: 0;
+}
+
 .profile-picture {
-  max-width: min(11.5rem, 23vw);
-  max-height: min(11.5rem, 23vw);
+  max-width: min(11.5rem, 50vw);
+  max-height: min(11.5rem, 50vw);
   margin: 1rem 0;
   display: block;
   border-radius: 0.5rem;

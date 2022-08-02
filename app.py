@@ -33,7 +33,7 @@ def display_home():
 @app.route("/api/cupcakes")
 def display_all_cupcakes():
     """Gets data about all cupcakes in the table."""
-    cupcakes_all = Cupcake.query.all()
+    cupcakes_all = Cupcake.query.order_by(Cupcake.id).all()
     cupcake_list = [cupcake.serialize() for cupcake in cupcakes_all]
     return jsonify(cupcakes=cupcake_list)
 

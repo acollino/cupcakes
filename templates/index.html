@@ -13,29 +13,43 @@
 </head>
 
 <body>
-  <div class="column centered">
+  <div class="column centered width-90">
     <h1>Available Cupcakes</h1>
-    <div class="row wrap align-top" id="cupcake-row">
+    <div class="row wrap align-top gap-1" id="cupcake-row">
     </div>
-    <h2>Add New Cupcake</h2>
+    <h2 class="margin-half-top">Add New Cupcake</h2>
     <form class="column">
       <div class="">
-        <label for="input-flavor" class="form-label">Flavor</label>
-        <input type="text" id="input-flavor" class="input-add" required name="flavor">
+        <label for="add-flavor" class="form-label">Flavor</label>
+        <input type="text" id="add-flavor" class="input-add" required name="flavor">
       </div>
       <div class="">
-        <label for="input-size" class="form-label">Size</label>
-        <input type="text" id="input-size" class="input-add" required name="size">
+        <label for="add-size" class="form-label">Size</label>
+        <input type="text" id="add-size" class="input-add" required name="size">
       </div>
       <div class="align-l">
-        <label for="input-rating" class="form-label">Rating</label>
-        <input type="number" id="input-rating" class="input-add" required step="0.1" size="3" name="rating">
+        <label for="add-rating" class="form-label">Rating</label>
+        <input type="number" id="add-rating" class="input-add" required step="0.1" size="3" name="rating">
       </div>
       <div class="">
-        <label for="input-image" class="form-label">Image URL</label>
-        <input type="url" id="input-image" class="input-add" name="image">
+        <label for="add-image" class="form-label">Image URL</label>
+        <input type="url" id="add-image" class="input-add" name="image">
       </div>
-      <button class="button-blue margin-1" id="submit">Submit</button>
+      <button class="button-blue margin-1" id="add-submit">Submit</button>
+    </form>
+  </div>
+  <div class="border border-rounded column edit-container">
+    <form class="column-small">
+      <h3>Edit Cupcake</h3>
+      <label for="edit-flavor" class="form-label margin-half-top">New Flavor</label>
+      <input type="text" id="edit-flavor" class="input-edit" required name="flavor" size="15">
+      <label for="edit-size" class="form-label margin-half-top">New Size</label>
+      <input type="text" id="edit-size" class="input-edit" required name="size" size="13">
+      <label for="edit-rating" class="form-label margin-half-top">New Rating</label>
+      <input type="number" id="edit-rating" class="input-edit" required step="0.1" size="3" name="rating">
+      <label for="edit-image" class="form-label margin-half-top">New Image</label>
+      <input type="url" id="edit-image" class="input-edit" name="image" size="15">
+      <button class="button-blue margin-half-top edit-submit">Submit</button>
     </form>
   </div>
 </body>
