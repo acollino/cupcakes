@@ -7,7 +7,7 @@ const $editForm = $(
       <label for="edit-size" class="form-label margin-half-top">New Size</label>
       <input type="text" id="edit-size" class="input-edit" name="size" size="13">
       <label for="edit-rating" class="form-label margin-half-top">New Rating</label>
-      <input type="number" id="edit-rating" class="input-edit" step="0.1" size="3" name="rating">
+      <input type="number" id="edit-rating" class="input-edit" step="0.1" size="3" name="rating" min="0" max="10">
       <label for="edit-image" class="form-label margin-half-top">New Image</label>
       <input type="url" id="edit-image" class="input-edit" name="image" size="15">
       <button class="button-blue margin-half-top edit-submit">Submit</button>
@@ -18,14 +18,14 @@ const $editForm = $(
 const addCupcakeFormat = [
   { type: "string", required: true },
   { type: "string", required: true },
-  { type: "number", required: true },
+  { type: "number", required: true, min:0, max:10 },
   { type: "url", required: false },
 ];
 
 const editCupcakeFormat = [
   { type: "string", required: false },
   { type: "string", required: false },
-  { type: "number", required: false },
+  { type: "number", required: false , min:0, max:10 },
   { type: "url", required: false },
 ];
 
@@ -59,7 +59,7 @@ class Cupcake {
     );
     $cakeCard.append($("<hr>"));
     $cakeCard.append(
-      $("<div>").text(`Rating: ${this.rating}`).addClass("cupcake-details")
+      $("<div>").text(`Rating: ${this.rating}/10`).addClass("cupcake-details")
     );
     $cakeCard.attr("data-id", this.id);
     return $cakeCard;
@@ -208,7 +208,9 @@ function validateInputArray(inputArray, expectedInputs) {
   inputArray.forEach((userInput, index) => {
     htmlValidity = htmlValidity && userInput.reportValidity();
     if (expectedInputs[index].type === "number") {
-      typeValidity = typeValidity && !isNaN(userInput.value);
+      typeValidity = typeValidity && !isNaN(userInput.value)
+        && userInput.value >= expectedInputs[index].min
+        && userInput.value <= expectedInputs[index].max;
     }
     if (expectedInputs[index].type === "url") {
       let inURLFormat = urlRegex.test(userInput.value);
