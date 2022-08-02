@@ -1,3 +1,19 @@
+const $editForm = $(
+  `<div class="border border-rounded column edit-container">
+    <form class="column-small">
+      <h3>Edit Cupcake</h3>
+      <label for="edit-flavor" class="form-label margin-half-top">New Flavor</label>
+      <input type="text" id="edit-flavor" class="input-edit" required name="flavor" size="15">
+      <label for="edit-size" class="form-label margin-half-top">New Size</label>
+      <input type="text" id="edit-size" class="input-edit" required name="size" size="13">
+      <label for="edit-rating" class="form-label margin-half-top">New Rating</label>
+      <input type="number" id="edit-rating" class="input-edit" required step="0.1" size="3" name="rating">
+      <label for="edit-image" class="form-label margin-half-top">New Image</label>
+      <input type="url" id="edit-image" class="input-edit" name="image" size="15">
+      <button class="button-blue margin-half-top edit-submit">Submit</button>
+    </form>
+  </div>`);
+
 class Cupcake {
   constructor(inputObj) {
     ({
@@ -10,22 +26,32 @@ class Cupcake {
   }
 
   generateJQuery() {
-    let $cakeCard = $("<div>").addClass("column-small card border border-rounded");
+    let $cakeCard = $("<div>").addClass(
+      "column-small card border border-rounded"
+    );
     let $imgHolder = $("<div>").addClass("picture-container");
     $imgHolder.append($(`<img src=${this.image}>`).addClass("profile-picture"));
     $cakeCard.append($imgHolder);
-    $cakeCard.append($("<div>").text(`Flavor: ${this.flavor}`).addClass("cupcake-details"));
+    $cakeCard.append(
+      $("<div>").text(`Flavor: ${this.flavor}`).addClass("cupcake-details")
+    );
     $cakeCard.append($("<hr>"));
-    $cakeCard.append($("<div>").text(`Size: ${this.size}`).addClass("cupcake-details"));
+    $cakeCard.append(
+      $("<div>").text(`Size: ${this.size}`).addClass("cupcake-details")
+    );
     $cakeCard.append($("<hr>"));
-    $cakeCard.append($("<div>").text(`Rating: ${this.rating}`).addClass("cupcake-details"));
+    $cakeCard.append(
+      $("<div>").text(`Rating: ${this.rating}`).addClass("cupcake-details")
+    );
     $cakeCard.attr("data-id", this.id);
     return $cakeCard;
   }
 
   generateDeleter() {
     let $deleter = $("<div>").addClass("delete button button-red");
-    $deleter.append($("<img>").attr("src", "/static/assets/delete.svg").addClass("icon"));
+    $deleter.append(
+      $("<img>").attr("src", "/static/assets/delete.svg").addClass("icon")
+    );
     $deleter.on("click", this.delete.bind(this));
     return $deleter;
   }
@@ -84,17 +110,24 @@ class CupcakeList {
     let $cakeCard = cupcake.generateJQuery();
     let $deleter = cupcake.generateDeleter();
     let $editButton = $("<div>").addClass("edit button button-light-blue");
-    $editButton.append($("<img>").attr("src", "/static/assets/edit.svg").addClass("icon"));
+    $editButton.append(
+      $("<img>").attr("src", "/static/assets/edit.svg").addClass("icon")
+    );
     $deleter.on("click", () => {
       this.deleteCupcake($deleter.parents(".card").attr("data-id"));
     });
-    $(".edit-container").first().clone().appendTo($cakeCard.children(".picture-container"));
+    $editForm.clone().appendTo($cakeCard.children(".picture-container"));
     $cakeCard.children(".picture-container").append($deleter);
     $cakeCard.children(".picture-container").append($editButton);
     $editButton.on("click", () => {
-      $(".edit-container").filter(function (index) {
-        return $(this).parents(".card").attr("data-id") != $cakeCard.attr("data-id");
-      }).css("display", "none");
+      $(".edit-container")
+        .filter(function (index) {
+          return (
+            $(this).parents(".card").attr("data-id") !=
+            $cakeCard.attr("data-id")
+          );
+        })
+        .css("display", "none");
       $editButton.parents(".card").find(".edit-container").toggle();
     });
     $("#cupcake-row").append($cakeCard);
