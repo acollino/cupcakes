@@ -22,13 +22,15 @@ h2, h3 {
 
 .picture-container:hover .delete,
 .picture-container:hover .edit{
-  opacity: 100%;
+  opacity: 1;
+  visibility: visible;
 }
 
 .delete, .edit {
   position: absolute;
-  opacity: 0%;
-  transition: opacity 0.25s ease-in;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.25s ease-in, opacity 0.25s ease-in;
 }
 
 .delete {

@@ -3,16 +3,34 @@ const $editForm = $(
     <form class="column-small">
       <h3>Edit Cupcake</h3>
       <label for="edit-flavor" class="form-label margin-half-top">New Flavor</label>
-      <input type="text" id="edit-flavor" class="input-edit" required name="flavor" size="15">
+      <input type="text" id="edit-flavor" class="input-edit" name="flavor" size="15">
       <label for="edit-size" class="form-label margin-half-top">New Size</label>
-      <input type="text" id="edit-size" class="input-edit" required name="size" size="13">
+      <input type="text" id="edit-size" class="input-edit" name="size" size="13">
       <label for="edit-rating" class="form-label margin-half-top">New Rating</label>
-      <input type="number" id="edit-rating" class="input-edit" required step="0.1" size="3" name="rating">
+      <input type="number" id="edit-rating" class="input-edit" step="0.1" size="3" name="rating">
       <label for="edit-image" class="form-label margin-half-top">New Image</label>
       <input type="url" id="edit-image" class="input-edit" name="image" size="15">
       <button class="button-blue margin-half-top edit-submit">Submit</button>
     </form>
-  </div>`);
+  </div>`
+);
+
+const addCupcakeFormat = [
+  { type: "string", required: true },
+  { type: "string", required: true },
+  { type: "number", required: true },
+  { type: "url", required: false },
+];
+
+const editCupcakeFormat = [
+  { type: "string", required: false },
+  { type: "string", required: false },
+  { type: "number", required: false },
+  { type: "url", required: false },
+];
+
+const urlRegex = /^(https?|ftp):\/\/[^\s\/$.?#].[^\s]*$/i;
+// regex testing and information: https://regex101.com/r/yAaf6p/1
 
 class Cupcake {
   constructor(inputObj) {
@@ -87,10 +105,13 @@ class Cupcake {
     let $cakeCard = $(`div[data-id=${this.id}]`);
     $cakeCard.find(".edit-submit").on("click", (evt) => {
       evt.preventDefault();
-      this.edit();
+      let inputs = $(evt.currentTarget).siblings(".input-edit").get();
+      if (validateInputArray(inputs, editCupcakeFormat)) {
+        this.edit();
+      }
     });
   }
-}
+};
 
 class CupcakeList {
   constructor() {
@@ -180,8 +201,32 @@ function convertInputIntoFetchObj(inputClass, fetchMethod) {
   return fetchObj;
 }
 
+function validateInputArray(inputArray, expectedInputs) {
+  let validSize = inputArray.length === expectedInputs.length;
+  let htmlValidity = true;
+  let typeValidity = true;
+  inputArray.forEach((userInput, index) => {
+    htmlValidity = htmlValidity && userInput.reportValidity();
+    if (expectedInputs[index].type === "number") {
+      typeValidity = typeValidity && !isNaN(userInput.value);
+    }
+    if (expectedInputs[index].type === "url") {
+      let inURLFormat = urlRegex.test(userInput.value);
+      let notRequired =
+        expectedInputs[index].required === false && userInput.value === "";
+      typeValidity = typeValidity && (inURLFormat || notRequired);
+      // This check prevents a non-required URL from invalidating the form, 
+      // as it would fail the regex test if left blank.
+    }
+  });
+  return validSize && htmlValidity && typeValidity;
+}
+
 const cakesList = new CupcakeList();
 $("#add-submit").click((evt) => {
   evt.preventDefault();
-  cakesList.submitNewCupcake();
+  let inputs = $(".input-add").get();
+  if (validateInputArray(inputs, addCupcakeFormat)) {
+    cakesList.submitNewCupcake();
+  }
 });
