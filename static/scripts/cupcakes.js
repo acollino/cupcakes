@@ -83,7 +83,7 @@ class Cupcake {
   }
 
   async edit() {
-    let fetchObj = convertInputIntoFetchObj(".input-edit", "patch");
+    let fetchObj = convertInputIntoFetchObj(".input-edit:visible", "patch");
     let response = await fetch(`/api/cupcakes/${this.id}`, fetchObj);
     if (response.status == 200) {
       let updatedCake = await response.json();
@@ -184,6 +184,9 @@ function convertInputIntoFetchObj(inputClass, fetchMethod) {
   let inputNamesAndValues = inputs.reduce((inputObj, currInput) => {
     if (Boolean(currInput.value)) {
       inputObj[currInput.name] = currInput.value;
+      if (currInput.name !== "image") {
+        inputObj[currInput.name] = toTitleCase(inputObj[currInput.name]);
+      }
     }
     return inputObj;
   }, {});
@@ -217,6 +220,16 @@ function validateInputArray(inputArray, expectedInputs) {
     }
   });
   return validSize && htmlValidity && typeValidity;
+}
+
+function toTitleCase(str) {
+  return str.replace(/\w+\W*/g, (word) => {
+    return titleWord(word);
+  });
+}
+
+function titleWord(word) {
+  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 }
 
 const cakesList = new CupcakeList();
