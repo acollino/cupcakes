@@ -144,6 +144,10 @@ button:active,
   background-color: #0b6b15;
 }
 
+.bg-white {
+  background-color: white;
+}
+
 .width-90 {
   max-width: 90%;
 }
