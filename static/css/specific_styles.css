@@ -57,6 +57,15 @@ h3 {
   text-align: right;
 }
 
+.input-edit {
+  border-radius: 2px;
+  border: 1px solid rgb(115 115 115);
+}
+
+.input-edit:hover {
+  border-color: rgb(55, 55, 55);;
+}
+
 #add-rating, #edit-rating {
   width: 4em;
 }

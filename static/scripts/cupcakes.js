@@ -2,13 +2,14 @@ const $editForm = $(
   `<div class="border border-rounded column edit-container">
     <form class="column-small">
       <h3>Edit Cupcake</h3>
-      <label for="edit-flavor" class="form-label margin-half-top">New Flavor</label>
+      <hr>
+      <label for="edit-flavor" class="margin-half-top">New Flavor</label>
       <input type="text" id="edit-flavor" class="input-edit" name="flavor" size="15">
-      <label for="edit-size" class="form-label margin-half-top">New Size</label>
+      <label for="edit-size" class="margin-half-top">New Size</label>
       <input type="text" id="edit-size" class="input-edit" name="size" size="13">
-      <label for="edit-rating" class="form-label margin-half-top">New Rating</label>
+      <label for="edit-rating" class="margin-half-top">New Rating</label>
       <input type="number" id="edit-rating" class="input-edit" step="0.1" size="3" name="rating" min="0" max="10">
-      <label for="edit-image" class="form-label margin-half-top">New Image</label>
+      <label for="edit-image" class="margin-half-top">New Image</label>
       <input type="url" id="edit-image" class="input-edit" name="image" size="15">
       <button class="button-blue margin-half-top edit-submit">Submit</button>
     </form>
