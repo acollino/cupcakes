@@ -97,7 +97,7 @@ class Cupcake {
     $cakeCard.find(".profile-picture").attr("src", this.image);
     $cakeCard.children(":contains('Flavor: ')").text(`Flavor: ${this.flavor}`);
     $cakeCard.children(":contains('Size: ')").text(`Size: ${this.size}`);
-    $cakeCard.children(":contains('Rating: ')").text(`Rating: ${this.rating}`);
+    $cakeCard.children(":contains('Rating: ')").text(`Rating: ${this.rating}/10`);
     $cakeCard.find(".edit-container").css("display", "none");
   }
 
@@ -140,16 +140,11 @@ class CupcakeList {
     $editForm.clone().appendTo($cakeCard.children(".picture-container"));
     $cakeCard.children(".picture-container").append($deleter);
     $cakeCard.children(".picture-container").append($editButton);
-    $editButton.on("click", () => {
-      $(".edit-container")
-        .filter(function (index) {
-          return (
-            $(this).parents(".card").attr("data-id") !=
-            $cakeCard.attr("data-id")
-          );
-        })
-        .css("display", "none");
-      $editButton.parents(".card").find(".edit-container").toggle();
+    $editButton.on("click", (evt) => {
+      let $currentEdit = $(evt.currentTarget).siblings(".edit-container");
+      let $otherEdits = $(".edit-container").not($currentEdit);
+      $otherEdits.css("display", "none");
+      $currentEdit.toggle();
     });
     $("#cupcake-row").append($cakeCard);
     cupcake.addEditFormEventHandler();
