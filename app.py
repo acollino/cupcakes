@@ -14,6 +14,34 @@ app.config["SQLALCHEMY_ECHO"] = True
 
 connect_db(app)
 
+@app.before_first_request
+def setup_table():
+    """Creates the cupcakes table before the page is first accessed."""
+    db.drop_all() #  If this was a real site hosted on heroku, dropping all every time the dynos started up
+    db.create_all()# would cause data loss, but this keeps the tables clean on this demo project.
+    seed_cupcakes = [
+        Cupcake(
+            flavor="Cookie Dough",
+            size="Medium",
+            rating=8.1,
+            image="https://cdn.pixabay.com/photo/2017/03/27/14/20/cupcakes-2179039_960_720.jpg",
+        ),
+        Cupcake(
+            flavor="Chocolate",
+            size="Small",
+            rating=8.5,
+            image="https://cdn.pixabay.com/photo/2020/05/01/09/13/cupcakes-5116009_960_720.jpg",
+        ),
+        Cupcake(
+            flavor="Hazelnut",
+            size="Large",
+            rating=9,
+            image="https://cdn.pixabay.com/photo/2013/04/15/14/08/cupcake-104654_960_720.jpg",
+        ),
+    ]
+    db.session.add_all(seed_cupcakes)
+    db.session.commit()
+
 
 @app.route("/")
 def display_home():
