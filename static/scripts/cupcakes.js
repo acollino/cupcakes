@@ -19,18 +19,18 @@ const $editForm = $(
 const addCupcakeFormat = [
   { type: "string", required: true },
   { type: "string", required: true },
-  { type: "number", required: true, min:0, max:10 },
+  { type: "number", required: true, min: 0, max: 10 },
   { type: "url", required: false },
 ];
 
 const editCupcakeFormat = [
   { type: "string", required: false },
   { type: "string", required: false },
-  { type: "number", required: false , min:0, max:10 },
+  { type: "number", required: false, min: 0, max: 10 },
   { type: "url", required: false },
 ];
 
-const urlRegex = /^(https?|ftp):\/\/[^\s\/$.?#].[^\s]*$/i;
+const urlRegex = /^(https?):\/\/[^\s\/$.?#].[^\s]*$/i;
 // regex testing and information: https://regex101.com/r/yAaf6p/1
 
 class Cupcake {
@@ -50,6 +50,7 @@ class Cupcake {
     );
     let $imgHolder = $("<div>").addClass("picture-container");
     $imgHolder.append($(`<img src=${this.image}>`).addClass("profile-picture"));
+    $imgHolder.append($editForm.clone());
     $cakeCard.append($imgHolder);
     $cakeCard.append(
       $("<div>").text(`Flavor: ${this.flavor}`).addClass("cupcake-details")
@@ -75,6 +76,20 @@ class Cupcake {
     return $deleter;
   }
 
+  generateEditButton() {
+    let $editButton = $("<div>").addClass("edit button button-light-blue");
+    $editButton.append(
+      $("<img>").attr("src", "/static/assets/edit.svg").addClass("icon")
+    );
+    $editButton.on("click", (evt) => {
+      let $currentEdit = $(evt.currentTarget).siblings(".edit-container");
+      let $otherEdits = $(".edit-container").not($currentEdit);
+      $otherEdits.css("display", "none");
+      $currentEdit.toggle();
+    });
+    return $editButton;
+  }
+
   async delete() {
     let fetchObj = { method: "delete" };
     let response = await fetch(`/api/cupcakes/${this.id}`, fetchObj);
@@ -98,7 +113,9 @@ class Cupcake {
     $cakeCard.find(".profile-picture").attr("src", this.image);
     $cakeCard.children(":contains('Flavor: ')").text(`Flavor: ${this.flavor}`);
     $cakeCard.children(":contains('Size: ')").text(`Size: ${this.size}`);
-    $cakeCard.children(":contains('Rating: ')").text(`Rating: ${this.rating}/10`);
+    $cakeCard
+      .children(":contains('Rating: ')")
+      .text(`Rating: ${this.rating}/10`);
     $cakeCard.find(".edit-container").css("display", "none");
   }
 
@@ -112,7 +129,7 @@ class Cupcake {
       }
     });
   }
-};
+}
 
 class CupcakeList {
   constructor() {
@@ -131,22 +148,12 @@ class CupcakeList {
   addCupcake(cupcake) {
     let $cakeCard = cupcake.generateJQuery();
     let $deleter = cupcake.generateDeleter();
-    let $editButton = $("<div>").addClass("edit button button-light-blue");
-    $editButton.append(
-      $("<img>").attr("src", "/static/assets/edit.svg").addClass("icon")
-    );
+    let $editButton = cupcake.generateEditButton();
     $deleter.on("click", () => {
       this.deleteCupcake($deleter.parents(".card").attr("data-id"));
     });
-    $editForm.clone().appendTo($cakeCard.children(".picture-container"));
     $cakeCard.children(".picture-container").append($deleter);
     $cakeCard.children(".picture-container").append($editButton);
-    $editButton.on("click", (evt) => {
-      let $currentEdit = $(evt.currentTarget).siblings(".edit-container");
-      let $otherEdits = $(".edit-container").not($currentEdit);
-      $otherEdits.css("display", "none");
-      $currentEdit.toggle();
-    });
     $("#cupcake-row").append($cakeCard);
     cupcake.addEditFormEventHandler();
   }
@@ -182,15 +189,7 @@ class CupcakeList {
 
 function convertInputIntoFetchObj(inputClass, fetchMethod) {
   let inputs = Array.from($(inputClass));
-  let inputNamesAndValues = inputs.reduce((inputObj, currInput) => {
-    if (Boolean(currInput.value)) {
-      inputObj[currInput.name] = currInput.value;
-      if (currInput.name !== "image") {
-        inputObj[currInput.name] = toTitleCase(inputObj[currInput.name]);
-      }
-    }
-    return inputObj;
-  }, {});
+  let inputNamesAndValues = inputs.reduce(processInputs, {});
   let fetchObj = {
     method: fetchMethod,
     headers: { "Content-Type": "application/json" },
@@ -200,27 +199,49 @@ function convertInputIntoFetchObj(inputClass, fetchMethod) {
   return fetchObj;
 }
 
+function processInputs(holderObj, currInput) {
+  if (Boolean(currInput.value)) {
+    holderObj[currInput.name] = currInput.value;
+    if (currInput.name !== "image") {
+      holderObj[currInput.name] = toTitleCase(holderObj[currInput.name]);
+    }
+  }
+  return holderObj;
+}
+
 function validateInputArray(inputArray, expectedInputs) {
   let validSize = inputArray.length === expectedInputs.length;
   let htmlValidity = true;
   let typeValidity = true;
   inputArray.forEach((userInput, index) => {
-    htmlValidity = htmlValidity && userInput.reportValidity();
+    htmlValidity &&= userInput.reportValidity();
     if (expectedInputs[index].type === "number") {
-      typeValidity = typeValidity && !isNaN(userInput.value)
-        && userInput.value >= expectedInputs[index].min
-        && userInput.value <= expectedInputs[index].max;
+      typeValidity &&= checkNumberValidity(
+        userInput.value,
+        expectedInputs[index].min,
+        expectedInputs[index].max
+      );
     }
     if (expectedInputs[index].type === "url") {
-      let inURLFormat = urlRegex.test(userInput.value);
-      let notRequired =
-        expectedInputs[index].required === false && userInput.value === "";
-      typeValidity = typeValidity && (inURLFormat || notRequired);
-      // This check prevents a non-required URL from invalidating the form, 
-      // as it would fail the regex test if left blank.
+      typeValidity &&= checkURLValidity(
+        userInput.value,
+        expectedInputs[index].required
+      );
     }
   });
   return validSize && htmlValidity && typeValidity;
+}
+
+function checkNumberValidity(num, min, max) {
+  return !isNaN(num) && num >= min && num <= max;
+}
+
+function checkURLValidity(url, required) {
+  let inURLFormat = urlRegex.test(url);
+  let notRequired = required === false && url === "";
+  // The notRequired check prevents a non-required URL from invalidating the form,
+  // as it would fail the regex test if left blank.
+  return inURLFormat || notRequired;
 }
 
 function toTitleCase(str) {
