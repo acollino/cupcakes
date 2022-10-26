@@ -7,7 +7,7 @@ Cupcakes are stored in a corresponding table in the desserts database, recording
 The cupcakes are displayed on the home page, and hovering over their images will bring up buttons to allow editing or deleting the cupcake.
 The home page also contains an Add New Cupcake form; this will add the new cake both to the database and the home page.
 
-Information is stored in a server-side database using PostgreSQL, accessed via Flask-Sqlalchemy. The page makes use of a JSON API with a RESTful format - a single endpoint that will process GET, POST, PATCH, and DELETE requests. Cupcakes are sent to and from the server as JSON, and the page's Javascript converts any received JSON into Cupcake objects stored in a CupcakeList and displays them on the page.
+Information is stored in a server-side database using PostgreSQL, accessed via Flask-SQLAlchemy. The page makes use of a JSON API with a RESTful format - a single endpoint that will process GET, POST, PATCH, and DELETE requests. Cupcakes are sent to and from the server as JSON, and the page's Javascript converts any received JSON into Cupcake objects stored in a CupcakeList and displays them on the page.
 
 The app is hosted on Heroku and is available at https://acollino-cupcakes.herokuapp.com.
 
